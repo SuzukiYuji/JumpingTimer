@@ -1,1 +1,113 @@
-Hellow World
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>jqueryでカウントダウンタイマー</title>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.min.js"></script>
+    <script>
+        //001----------jqueryの開始------------------------------------------------------
+        $(function () {
+
+            //002-----------↓何分のタイマーにするか入力------------------------------------------
+            var minutes = 1;
+            //003---------------------------------------------------------------------------
+            var dafa_time = (minutes * 60);
+            var time = dafa_time;
+            var interval;
+            var min;
+            var sec;
+            var round = 0;
+
+            calc();
+
+            $('#start').on("click", function () {
+                $('#start').prop('disabled', true);
+                time = $('#worktime').val();
+                $('#round').html(round);
+                calc();
+                interval = setInterval(startTimer, 1000);
+            });
+
+            $('#stop').on("click", function stopTimer() {
+                clearInterval(interval);
+                $('#start').prop('disabled', false);
+            });
+
+            $('#reset').on("click", function () {
+                clearInterval(interval);
+                $('#start').prop('disabled', false);
+                resetTimer();
+            });
+
+
+            function startTimer() {
+                time--;
+                if (time === -1) {
+                    clearInterval(interval);
+                    time = $('#resttime').val();
+                    round++;
+                    $('#round').html(round);
+                    calc();
+                    interval = setInterval(startResttimer, 1000);
+                } else {
+                    calc();
+                }
+            }
+
+            function startResttimer() {
+                time--;
+                if (time === -1) {
+                    clearInterval(interval);
+                    time = $('#worktime').val();
+                    calc();
+                    interval = setInterval(startTimer, 1000);
+                } else {
+                    calc();
+                }
+            }
+
+
+            function resetTimer() {
+                time = dafa_time;
+                calc();
+            }
+
+
+            function calc() {
+                min = Math.floor(time / 60);
+                sec = time % 60;
+                min = ('00' + min).slice(-2);
+                sec = ('00' + sec).slice(-2);
+                $('#timer').html(min + ":" + sec);
+            }
+
+        });
+    </script>
+    <style type="text/css">
+        #timer {
+            font-size: 64pt;
+            text-align: center;
+        }
+        #round {
+            font-size: 32pt;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="round">0</div>
+    <div id="timer">00:00</div>
+    <div>
+        時間　　　　
+        <input id="worktime" type="number" value="150"/>
+    </div>
+    <div>
+        インターバル
+        <input id="resttime" type="number" value="30"/>
+    </div>
+    <button id="start">スタート</button>
+    <button id="stop">ストップ</button>
+    <button id="reset">リセット</button>
+</body>
